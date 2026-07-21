@@ -4,11 +4,24 @@
 	<!--Name of the mod to display to players-->
 	<DisplayName Value="Route Selector" />
 	<!--Short description of the mod-->
-	<ShortDescription Value="This is a short description" />
+	<ShortDescription Value="Select a transit line and hide all the rest — finally edit overlapping bus, tram and train routes without the guesswork." />
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="This is a long description" /-->
 	<LongDescription>
-This is a long description
+Ever tried to edit one train route when four lines share the same road? Click the line you want... and get one of the other three, again and again.
+
+Route Isolation fixes that. Pick a line from the list and hit Edit, and every other line is hidden completely, leaving only your selected route on the map. Overlapping routes on shared roads, tram corridors and rail tracks become instantly readable, and you can adjust stops and reroute with confidence that you're editing the right line.
+
+FEATURES
+- Select any transit line and all others disappear automatically
+- Works with every transit type: bus, tram, metro, train, and more
+- All lines reappear the moment you deselect
+
+COMPATIBILITY
+- No save game changes: safe to add or remove at any time
+- Purely visual — does not touch the simulation
+
+Found a bug or have a feature idea? Leave a comment or post in the forum thread.
 	</LongDescription>
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
