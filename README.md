@@ -2,6 +2,8 @@
 
 A [Cities: Skylines II](https://www.paradoxinteractive.com/games/cities-skylines-ii) mod focused on making public transport route management usable at scale.
 
+Published on [Paradox Mods](https://mods.paradoxplaza.com/mods/152185/Windows).
+
 ## The problem
 
 Cities: Skylines II has no way to directly select an existing transit route (bus, tram, train, etc.) to edit it. When multiple lines share the same road or track, clicking on that road/track is ambiguous — the game can't tell you which line you actually meant to pick, making it difficult or impossible to edit a specific route once your network gets complex.
@@ -37,3 +39,4 @@ UI side: from the `UI/` folder, run `npm install` then `npm run build` (requires
 - Fixed newly completed, un-renamed lines showing their tool/prefab name (e.g. "Passenger Railway Line Tool") instead of the game's default "Line 2" / "Line 3" numbering. The panel now sends the game's structured `NameSystem.Name` (via `GetName`, which knows how to format transit line numbers) instead of the generic `GetRenderedLabelName`, and renders it client-side with `cs2/l10n`'s `LocalizedEntityName`, matching how the game names lines everywhere else.
 - Fixed the line list reordering whenever a line was selected/highlighted. The underlying game query's entity order can shift as components like selection/highlight are added or removed, so the panel now sorts lines by entity index before displaying them, keeping the order stable regardless of selection.
 - Investigated a report of train lines appearing in reverse order (bus/tram were fine). Decompiled the vanilla game's own line list (`Game.UI.InGame.UITransportLineData.CompareTo`) and confirmed it sorts by transport type then `entity.Index` — the exact same key we use. So this isn't a bug we introduced; it's inherent to `entity.Index` not reflecting true creation order once a line's entity has been through enough create/destroy churn (heavier for trains, which get redrawn/edited more), and vanilla has the same quirk. Left as-is to match vanilla behavior; `Game.Routes.RouteNumber` (a stable per-line number that survives renames) is available as a future alternative sort key if we ever want to deviate from vanilla ordering.
+- Fixed the mod showing as incompatible for everyone after the first publish. `PublishConfiguration.xml`'s `GameVersion` was left at the toolchain's placeholder (`1.0.*`) instead of the actual game version the mod was built and tested against — updated to `1.6.*`.
