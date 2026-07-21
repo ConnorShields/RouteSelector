@@ -28,3 +28,7 @@ Routes are split by transit type (bus, tram, train, metro, etc.) so you can filt
 C# side: this is a standard CS2 mod project built with the [Cities: Skylines II Modding Toolchain](https://cs2.paradoxwikis.com/Modding). Open `RouteSelector.sln` in Rider or Visual Studio with the toolchain installed (requires the `CSII_TOOLPATH` environment variable to be set) and build normally.
 
 UI side: from the `UI/` folder, run `npm install` then `npm run build` (requires the `CSII_USERDATAPATH` environment variable, set by the modding toolchain installer). Both the C# DLL and the UI bundle deploy to the same `Mods/RouteSelector` folder.
+
+## Changelog
+
+- Fixed a bug where a line being actively drawn with the game's own line tool would briefly appear in the panel (as a placeholder entry) before the line was actually finished. The line entity query in `TransitLineListUISystem.cs` now excludes entities carrying the game's `Game.Tools.Temp` component, which the tool attaches to in-progress preview entities, so only completed lines are listed.

@@ -32,7 +32,8 @@ namespace RouteSelector
             m_LineQuery = GetEntityQuery(
                 ComponentType.ReadOnly<Route>(),
                 ComponentType.ReadOnly<TransportLine>(),
-                ComponentType.ReadOnly<PrefabRef>());
+                ComponentType.ReadOnly<PrefabRef>(),
+                ComponentType.Exclude<Game.Tools.Temp>());
 
             AddBinding(m_Lines = new RawValueBinding("routeSelector", "lines", WriteLines));
         }
