@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS2TrafficManagement", "CS2TrafficManagement\CS2TrafficManagement.csproj", "{58E3CAD2-125D-4985-B74A-11A47F39C979}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSelector", "RouteSelector\RouteSelector.csproj", "{58E3CAD2-125D-4985-B74A-11A47F39C979}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

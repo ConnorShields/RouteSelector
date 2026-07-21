@@ -1,9 +1,14 @@
 ## .NET / Rider
 bin/
 obj/
+Library/
 *.user
 .idea/
 .vs/
+
+## UI (npm/webpack)
+UI/node_modules/
+UI/build/
 
 ## OS
 .DS_Store
