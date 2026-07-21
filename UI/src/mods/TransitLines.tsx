@@ -43,9 +43,14 @@ export const TransitLinesButton = () => {
     const lines = useValue(lines$);
     const [activeType, setActiveType] = useState<number | null>(null);
 
-    const types = Array.from(new Set(lines.map((line) => line.type))).sort((a, b) => a - b);
+    // Entities can shuffle position within the game's underlying query as
+    // components (e.g. highlight/selection) get added or removed, so sort by
+    // entity index to keep the panel's order stable across selections.
+    const sortedLines = [...lines].sort((a, b) => a.entity.index - b.entity.index);
+
+    const types = Array.from(new Set(sortedLines.map((line) => line.type))).sort((a, b) => a - b);
     const visibleType = activeType !== null && types.includes(activeType) ? activeType : types[0] ?? null;
-    const visibleLines = lines.filter((line) => line.type === visibleType);
+    const visibleLines = sortedLines.filter((line) => line.type === visibleType);
 
     return (
         <>
