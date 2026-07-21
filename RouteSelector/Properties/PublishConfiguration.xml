@@ -34,10 +34,6 @@ Found a bug or have a feature idea? Leave a comment or post in the forum thread.
 	<Tag Value="UI" />
 	<Tag Value="Traffic" />
 	<Tag Value="Transit" />
-	<Tag Value="Isolation" />
-	<Tag Value="Route" />
-	<Tag Value="Selector" />
-	<Tag Value="Route Selector" />
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/transit-route-selector.1935757/" />
 	<!--Version of the mod-->
