@@ -26,11 +26,20 @@ Found a bug or have a feature idea? Leave a comment or post in the forum thread.
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="" />
+	<Screenshot Value="Properties/Screenshots/Panel open.jpg" />
+	<Screenshot Value="Properties/Screenshots/All lines visible.jpg" />
+	<Screenshot Value="Properties/Screenshots/Adding waypoint.jpg" />
 	<!--Tag, can be set multiple times-->
-	<Tag Value="" />
+	<Tag Value="Transportation" />
+	<Tag Value="UI" />
+	<Tag Value="Traffic" />
+	<Tag Value="Transit" />
+	<Tag Value="Isolation" />
+	<Tag Value="Route" />
+	<Tag Value="Selector" />
+	<Tag Value="Route Selector" />
 	<!--Link to the forum post where the mod can be discussed-->
-	<ForumLink Value="" />
+	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/transit-route-selector.1935757/" />
 	<!--Version of the mod-->
 	<ModVersion Value="1.0" />
 	<!--Recommended version of the base game to use the mod-->
