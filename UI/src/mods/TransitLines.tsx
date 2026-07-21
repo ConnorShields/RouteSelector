@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { bindValue, useValue } from "cs2/api";
 import { toolbar, transport } from "cs2/bindings";
+import { LocalizedEntityName, Name } from "cs2/l10n";
 import { Button, FloatingButton, Panel } from "cs2/ui";
 
 interface Entity {
@@ -11,7 +12,7 @@ interface Entity {
 interface LineInfo {
     entity: Entity;
     prefab: Entity;
-    name: string;
+    name: Name;
     type: number;
     color: string;
 }
@@ -98,7 +99,7 @@ export const TransitLinesButton = () => {
                                             flexShrink: 0,
                                         }}
                                     />
-                                    <span>{line.name}</span>
+                                    <span><LocalizedEntityName value={line.name} /></span>
                                 </div>
                                 <Button
                                     variant="flat"

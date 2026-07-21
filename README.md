@@ -32,3 +32,4 @@ UI side: from the `UI/` folder, run `npm install` then `npm run build` (requires
 ## Changelog
 
 - Fixed a bug where a line being actively drawn with the game's own line tool would briefly appear in the panel (as a placeholder entry) before the line was actually finished. The line entity query in `TransitLineListUISystem.cs` now excludes entities carrying the game's `Game.Tools.Temp` component, which the tool attaches to in-progress preview entities, so only completed lines are listed.
+- Fixed newly completed, un-renamed lines showing their tool/prefab name (e.g. "Passenger Railway Line Tool") instead of the game's default "Line 2" / "Line 3" numbering. The panel now sends the game's structured `NameSystem.Name` (via `GetName`, which knows how to format transit line numbers) instead of the generic `GetRenderedLabelName`, and renders it client-side with `cs2/l10n`'s `LocalizedEntityName`, matching how the game names lines everywhere else.

@@ -53,7 +53,7 @@ namespace RouteSelector
         {
             using NativeArray<Entity> lines = m_LineQuery.ToEntityArray(Allocator.Temp);
 
-            var rows = new List<(Entity entity, Entity prefab, string name, TransportType type, Color32 color)>();
+            var rows = new List<(Entity entity, Entity prefab, NameSystem.Name name, TransportType type, Color32 color)>();
 
             foreach (Entity line in lines)
             {
@@ -68,7 +68,7 @@ namespace RouteSelector
                     ? EntityManager.GetComponentData<Game.Routes.Color>(line).m_Color
                     : new Color32(255, 255, 255, 255);
 
-                string name = m_NameSystem.GetRenderedLabelName(line);
+                NameSystem.Name name = m_NameSystem.GetName(line);
 
                 rows.Add((line, prefabRef.m_Prefab, name, lineData.m_TransportType, color));
             }
@@ -86,7 +86,7 @@ namespace RouteSelector
                 WriteEntity(writer, row.prefab);
 
                 writer.PropertyName("name");
-                writer.Write(row.name);
+                row.name.Write(writer);
 
                 writer.PropertyName("type");
                 writer.Write((int)row.type);
