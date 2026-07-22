@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { bindValue, useValue } from "cs2/api";
 import { toolbar, transport } from "cs2/bindings";
 import { LocalizedEntityName, Name } from "cs2/l10n";
-import { Button, FloatingButton, Panel } from "cs2/ui";
+import { Button, FloatingButton, Panel, Portal } from "cs2/ui";
+import icon from "images/RouteSelectorIcon.svg";
 
 interface Entity {
     index: number;
@@ -40,6 +41,8 @@ const TRANSPORT_TYPE_NAMES: Record<number, string> = {
 
 export const TransitLinesButton = () => {
     const [open, setOpen] = useState(false);
+    const buttonRef = useRef<HTMLDivElement>(null);
+    const [panelPosition, setPanelPosition] = useState<{ top: number; right: number } | null>(null);
     const lines = useValue(lines$);
     const [activeType, setActiveType] = useState<number | null>(null);
 
@@ -52,78 +55,98 @@ export const TransitLinesButton = () => {
     const visibleType = activeType !== null && types.includes(activeType) ? activeType : types[0] ?? null;
     const visibleLines = sortedLines.filter((line) => line.type === visibleType);
 
+    // The panel is rendered through a Portal (so it can't get caught up in the
+    // toolbar's own flex layout and shove the button around) and anchored with
+    // position: fixed at the button's actual on-screen rect, measured directly
+    // rather than assumed from DOM order.
+    useLayoutEffect(() => {
+        if (!open || !buttonRef.current) return;
+
+        const updatePosition = () => {
+            const rect = buttonRef.current!.getBoundingClientRect();
+            setPanelPosition({ top: rect.bottom, right: window.innerWidth - rect.right });
+        };
+
+        updatePosition();
+        window.addEventListener("resize", updatePosition);
+        return () => window.removeEventListener("resize", updatePosition);
+    }, [open]);
+
     return (
-        <div style={{ position: "relative" }}>
+        <div ref={buttonRef} style={{ position: "relative" }}>
             <FloatingButton
-                src="Media/Game/Icons/Routetool.svg"
+                src={icon}
                 tooltipLabel="Transit Lines"
                 selected={open}
                 onSelect={() => setOpen(!open)}
             />
-            {open && (
-                <Panel
-                    header={<div>Transit Lines</div>}
-                    onClose={() => setOpen(false)}
-                    style={{ position: "absolute", top: "100%", right: 0, marginTop: "0.5rem" }}
-                >
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                        {types.map((type) => (
-                            <Button
-                                key={type}
-                                variant="flat"
-                                selected={type === visibleType}
-                                onSelect={() => setActiveType(type)}
-                            >
-                                {TRANSPORT_TYPE_NAMES[type] ?? `Type ${type}`}
-                            </Button>
-                        ))}
-                    </div>
-                    <div>
-                        {visibleLines.map((line) => (
-                            <div
-                                key={`${line.entity.index}.${line.entity.version}`}
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "0.5rem",
-                                    padding: "0.25rem 0",
-                                }}
-                            >
-                                <div
-                                    onClick={() => transport.selectLine(line.entity)}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "0.5rem",
-                                        cursor: "pointer",
-                                        flex: 1,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            width: "12px",
-                                            height: "12px",
-                                            borderRadius: "50%",
-                                            background: line.color,
-                                            flexShrink: 0,
-                                        }}
-                                    />
-                                    <span><LocalizedEntityName value={line.name} /></span>
-                                </div>
-                                <Button
-                                    variant="flat"
-                                    onSelect={() => {
-                                        editLine(line);
-                                        setOpen(false);
-                                    }}
-                                >
-                                    Edit
-                                </Button>
+            {open && panelPosition && (
+                <Portal>
+                    <div style={{ position: "fixed", top: panelPosition.top, right: panelPosition.right, marginTop: "0.5rem" }}>
+                        <Panel
+                            header={<div>Transit Lines</div>}
+                            onClose={() => setOpen(false)}
+                        >
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                                {types.map((type) => (
+                                    <Button
+                                        key={type}
+                                        variant="flat"
+                                        selected={type === visibleType}
+                                        onSelect={() => setActiveType(type)}
+                                    >
+                                        {TRANSPORT_TYPE_NAMES[type] ?? `Type ${type}`}
+                                    </Button>
+                                ))}
                             </div>
-                        ))}
-                        {visibleLines.length === 0 && <div>No lines of this type yet.</div>}
+                            <div>
+                                {visibleLines.map((line) => (
+                                    <div
+                                        key={`${line.entity.index}.${line.entity.version}`}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "0.5rem",
+                                            padding: "0.25rem 0",
+                                        }}
+                                    >
+                                        <div
+                                            onClick={() => transport.selectLine(line.entity)}
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "0.5rem",
+                                                cursor: "pointer",
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: "12px",
+                                                    height: "12px",
+                                                    borderRadius: "50%",
+                                                    background: line.color,
+                                                    flexShrink: 0,
+                                                }}
+                                            />
+                                            <span><LocalizedEntityName value={line.name} /></span>
+                                        </div>
+                                        <Button
+                                            variant="flat"
+                                            onSelect={() => {
+                                                editLine(line);
+                                                setOpen(false);
+                                            }}
+                                        >
+                                            Edit
+                                        </Button>
+                                    </div>
+                                ))}
+                                {visibleLines.length === 0 && <div>No lines of this type yet.</div>}
+                            </div>
+                        </Panel>
                     </div>
-                </Panel>
+                </Portal>
             )}
         </div>
     );

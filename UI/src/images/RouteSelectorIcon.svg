@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Pale blue rounded-square background, matching in-game icon style -->
+  <rect x="0" y="0" width="1024" height="1024" rx="180" fill="#7ECDEB"/>
+
+  <!-- Flat route line across the middle -->
+  <rect x="90" y="482" width="844" height="60" rx="30" fill="#FFFFFF"/>
+
+  <!-- Stop circle, slightly off-center to the left (donut so the line reads through it) -->
+  <circle cx="400" cy="512" r="118" fill="#FFFFFF"/>
+  <circle cx="400" cy="512" r="62" fill="#7ECDEB"/>
+
+  <!-- Mouse cursor on the right, overlapping the line -->
+  <g transform="translate(640,400) scale(17)">
+    <path d="M0 0 L0 17.5 L4.7 13.6 L7.3 19.6 L10.6 18.2 L8 12.3 L14 12.3 Z"
+          fill="#FFFFFF" stroke="#1B5E77" stroke-width="1.6" stroke-linejoin="round"/>
+  </g>
+</svg>
