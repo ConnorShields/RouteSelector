@@ -33,6 +33,22 @@ UI side: from the `UI/` folder, run `npm install` then `npm run build` (requires
 
 **Gotcha:** the C# build's toolchain-provided `DeployWIP` target (in the shared `Mod.targets`, outside this repo) wipes the entire `Mods/RouteSelector` folder before copying its own output — it has no awareness of the UI bundle sitting there. So a C# build alone will silently delete the last `npm run build` output (and vice versa isn't a problem, since the UI build only writes its own files). After rebuilding the C# project, always re-run `npm run build` too before testing in-game, or the toolbar panel's UI will be missing even though the mod DLL loads fine.
 
+## Publishing
+
+1. In `RouteSelector/Properties/PublishConfiguration.xml`, bump `ModVersion` and update `ChangeLog`/`Screenshot`s as needed. If you're unsure whether the current `ModVersion` was already published (a broken or partial previous publish still counts), check the live mod page first — reusing an already-published version number has undefined behavior.
+2. Build the C# project in Release: `dotnet build RouteSelector.sln -c Release`.
+3. Build the UI: `cd UI && npm run build && cd ..`. Steps 2–3 leave `Mods/RouteSelector` complete (DLL + UI bundle), same as local testing.
+4. Publish in one pass, from the repo root:
+   ```
+   dotnet publish RouteSelector\RouteSelector.csproj -c Release --no-build -p:ModPublisherCommand=NewVersion -p:DeployDir="%CSII_LOCALMODSPATH%\RouteSelector"
+   ```
+
+**Why `--no-build` is required:** `NewVersion` (and `Publish`, for a first-ever release) leaves the toolchain's `NeedBuild` flag `true`, so `dotnet publish`'s normal pipeline reruns the C# build and its `DeployWIP` target — wiping `Mods/RouteSelector` down to just the compiled DLL — right before the upload step reads that same folder. That's the same wipe as the Gotcha above, just happening automatically mid-publish instead of at your own build step, so without `--no-build` the uploaded version silently ships without the UI. `--no-build` skips that rebuild dependency, so the already-complete folder from steps 2–3 gets uploaded untouched. `-p:DeployDir=...` has to be passed explicitly because that path is normally computed inside the same build step `--no-build` skips.
+
+If the publish command fails, rerun it with `-tl:off -v:normal` appended — dotnet's default terminal logger collapses per-project output into a one-line summary and hides `ModPublisher.exe`'s actual console output, which is usually where the real error message is.
+
+`UpdatePublishedConfiguration` (`ModPublisherCommand=Update`) is the only profile with `NeedBuild=false` — it skips the rebuild unconditionally and just re-uploads whatever's currently in the deploy folder. Useful for a metadata-only touch-up (description, screenshots) without shipping a new version.
+
 ## Changelog
 
 - Fixed a bug where a line being actively drawn with the game's own line tool would briefly appear in the panel (as a placeholder entry) before the line was actually finished. The line entity query in `TransitLineListUISystem.cs` now excludes entities carrying the game's `Game.Tools.Temp` component, which the tool attaches to in-progress preview entities, so only completed lines are listed.
